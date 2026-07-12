@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Iris ramp */
+  --iris-50:  #F1F1FD;
+  --iris-100: #E4E5FA;
+  --iris-200: #C9CBF5;
+  --iris-300: #A9ADEE;
+  --iris-400: #8288E6;
+  --iris-500: #6169E0;
+  --iris-600: #4B54DD;
+  --iris-700: #3D43BE;
+  --iris-800: #333A98;
+  --iris-900: #2C3379;
+  --iris-950: #1D2050;
+
+  /* Lilac ramp */
+  --lilac-50:  #F6F2FF;
+  --lilac-100: #EDE7FC;
+  --lilac-200: #DDD1F7;
+  --lilac-300: #C6B4F0;
+  --lilac-400: #B29BEA;
+  --lilac-500: #9B84E0;
+  --lilac-600: #8570D2;
+  --lilac-700: #6E5BC0;
+  --lilac-800: #5B4B9E;
+  --lilac-900: #473B7C;
+  --lilac-950: #2F2653;
+
+  /* Neutral ramp (violet-tinted) */
+  --neutral-0:   #FFFFFF;
+  --neutral-50:  #FAF8FF;
+  --neutral-100: #F3F1F9;
+  --neutral-200: #E7E5EE;
+  --neutral-300: #D3D0DE;
+  --neutral-400: #A9A5B8;
+  --neutral-500: #7D7891;
+  --neutral-600: #5C5872;
+  --neutral-700: #403D52;
+  --neutral-800: #2A2740;
+  --neutral-900: #1A1830;
+
+  /* Semantic — Brand */
+  --brand-primary:          #4B54DD;
+  --brand-primary-hover:    #3D43BE;
+  --brand-primary-active:   #333A98;
+  --brand-primary-subtle:   #F1F1FD;
+  --brand-secondary:        #9B84E0;
+  --brand-secondary-subtle: #F6F2FF;
+  --brand-on-primary:       #FFFFFF;
+
+  /* Semantic — Text */
+  --text-primary:   #1D2050;
+  --text-secondary: #473B7C;
+  --text-muted:     #7D7891;
+  --text-on-brand:  #FFFFFF;
+  --text-link:      #4B54DD;
+  --text-link-hover: #3D43BE;
+
+  /* Semantic — Surface */
+  --surface-page:       #FAF8FF;
+  --surface-card:       #FFFFFF;
+  --surface-sunken:     #F6F2FF;
+  --surface-brand-wash: #F1F1FD;
+
+  /* Border */
+  --border-default: #E7E5EE;
+  --border-strong:  #D3D0DE;
+  --border-brand:   #C9CBF5;
+
+  /* Feedback */
+  --success:        #1FA96A;
+  --success-subtle: #E6F6EF;
+  --warning:        #F5A524;
+  --warning-subtle: #FDF1DE;
+  --error:          #E5484D;
+  --error-subtle:   #FCE9EA;
+
+  /* Star / Reward */
+  --star-gold:        #FFC24B;
+  --star-gold-deep:   #E6A21E;
+  --star-gold-text:   #8A5510;
+  --star-gold-subtle: #FFF3D6;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--surface-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Star burst keyframes */
+@keyframes star-pop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.3) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes particle-fly {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-star-pop {
+  animation: star-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s ease forwards;
+}
