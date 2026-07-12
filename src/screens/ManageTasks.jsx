@@ -72,10 +72,18 @@ export default function ManageTasks() {
             key={task.id}
             className="flex items-center gap-3 px-4 py-4 bg-[var(--surface-card)] border border-[var(--border-default)] rounded-xl"
           >
-            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${task.completed ? 'bg-[var(--brand-primary)]' : 'bg-[var(--border-strong)]'}`} />
-            <span className={`flex-1 text-sm font-[500] ${task.completed ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-primary)]'}`}>
+            <span
+              className={`w-2 h-2 rounded-full flex-shrink-0 ${task.completed ? 'bg-[var(--success)]' : 'bg-[var(--border-strong)]'}`}
+              title={task.completed ? 'Completed today' : 'Not done yet'}
+            />
+            <span className="flex-1 text-sm font-[500] text-[var(--text-primary)]">
               {task.name}
             </span>
+            {task.completed && (
+              <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--success)] bg-[var(--success-subtle)] px-2 py-0.5 rounded-full">
+                done today
+              </span>
+            )}
             {task.isPreset && (
               <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--text-muted)] bg-[var(--neutral-100)] px-2 py-0.5 rounded-full">
                 preset

@@ -1,16 +1,32 @@
-# React + Vite
+# ⭐ Ivy's Planner & Reward App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A simple planner and reward app for Ivy (11). Track daily tasks, earn stars, redeem them for real-world rewards, and watch progress over four weeks.
 
-Currently, two official plugins are available:
+Built by the house: **Finn** briefed it, **Oscar** designed the visual system, **Nathan** wired the logic and shipped it.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+- **Tasks** — daily checklist (5 presets, up to 10). Check one off, earn a star, get a little burst of celebration.
+- **Redeem** — spend stars on rewards. Can't go below zero.
+- **History** — every redemption, newest first.
+- **Stats** — a 4-week bar chart of stars earned. Best week glows gold.
+- **Manage** — add or remove tasks (max 10).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+All data lives in the browser (localStorage) and resets every 90 days, with a 7-day heads-up.
 
-## Expanding the Oxlint configuration
+## Tech
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+React + Vite + Tailwind. Design tokens (Oscar's iris/lilac system) are wired as CSS custom properties in `src/index.css` and mapped into Tailwind — so a stricter component layer (shadcn) can slot in later with zero rework.
+
+Hash routing + `base: './'` so it runs as a static site on GitHub Pages. PWA manifest included — add a service worker later to make it installable to the iPad Home Screen.
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Deploy
+
+Pushing to `main` triggers `.github/workflows/deploy.yml`, which builds and publishes to GitHub Pages automatically. Enable Pages → Source: **GitHub Actions** once, and every push ships.
