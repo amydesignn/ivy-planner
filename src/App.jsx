@@ -9,7 +9,7 @@ import ManageTasks from './screens/ManageTasks'
 export default function App() {
   return (
     <HashRouter>
-      <div className="min-h-screen bg-[var(--surface-page)]">
+      <div className="min-h-screen bg-[var(--brand-lilac-50)]">
         <Routes>
           <Route path="/"        element={<Home />} />
           <Route path="/redeem"  element={<Redeem />} />

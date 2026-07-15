@@ -1,76 +1,64 @@
-import { getWeeklyStarTotals, getStars } from '../lib/store'
+import { getWeeklyStarTotals } from '../lib/store'
+import { StarIcon } from '../components/Icons'
 
-const WEEK_LABELS = ['3 weeks ago', '2 weeks ago', 'Last week', 'This week']
+// Lifted from Oscar's V1.1 Progress screen (markup + tokens), wired to the store.
+const LABELS = ['3 wks ago', '2 wks ago', 'Last week', 'This week']
+const MAX_BAR = 150
 
 export default function Stats() {
-  const weekTotals = getWeeklyStarTotals()
-  const totalStars = getStars()
-  const maxWeek    = Math.max(...weekTotals, 1)
-  const bestWeek   = weekTotals.indexOf(Math.max(...weekTotals))
+  const weeks = getWeeklyStarTotals() // [oldest … newest], length 4
+  const maxVal = Math.max(...weeks, 1)
+  // best week = the highest; on a tie the most recent wins
+  let bestIdx = 0
+  weeks.forEach((v, i) => { if (v >= weeks[bestIdx]) bestIdx = i })
 
   return (
-    <div className="flex flex-col min-h-full pb-24 pt-10 px-5">
-      <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-1">
-        Progress
-      </p>
-      <h1 className="text-3xl font-[550] text-[var(--text-primary)] mb-8">My Stats</h1>
+    <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto', padding: '4px 22px 118px', background: 'var(--brand-lilac-50)' }}>
+      <div style={{ animation: 'ivyfade 240ms ease both' }}>
+        <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--brand-iris-950)', margin: '6px 2px 4px' }}>Your progress</div>
+        <div style={{ fontSize: 13, color: 'var(--brand-lilac-600)', margin: '0 2px 20px' }}>Stars earned each week</div>
 
-      {/* Current stars */}
-      <div className="bg-[var(--surface-sunken)] border border-[var(--border-brand)] rounded-2xl px-5 py-5 mb-8 flex items-center gap-4">
-        <span className="text-4xl">⭐</span>
-        <div>
-          <p className="text-4xl font-[550] text-[var(--star-gold-text)]">{totalStars}</p>
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">stars in your wallet</p>
-        </div>
-      </div>
-
-      {/* 4-week bar chart */}
-      <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] mb-4">
-          Stars earned — last 4 weeks
-        </p>
-
-        <div className="flex items-end gap-3 h-40">
-          {weekTotals.map((val, i) => {
-            const heightPct = maxWeek > 0 ? (val / maxWeek) * 100 : 0
-            const isBest    = i === bestWeek && val > 0
-            return (
-              <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                <span className="text-xs font-bold text-[var(--text-secondary)]">
-                  {val > 0 ? val : ''}
-                </span>
-                <div className="w-full flex items-end" style={{ height: '100px' }}>
-                  <div
-                    className="w-full rounded-t-lg transition-all duration-700"
-                    style={{
-                      height: `${Math.max(heightPct, val > 0 ? 6 : 0)}%`,
-                      background: isBest
-                        ? 'var(--star-gold)'
-                        : val === 0
-                          ? 'var(--border-default)'
-                          : 'var(--brand-primary)',
-                    }}
-                  />
+        {/* Chart */}
+        <div style={{ padding: '20px 18px 16px', background: '#fff', border: '2px solid var(--brand-lilac-100)', borderRadius: 22 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12, height: 190 }}>
+            {weeks.map((val, i) => {
+              const best = i === bestIdx
+              const h = Math.round((val / maxVal) * MAX_BAR)
+              return (
+                <div key={i} style={{ flex: '1 1 0%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, height: '100%', justifyContent: 'flex-end' }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: best ? 'var(--brand-iris-600)' : 'var(--brand-lilac-600)' }}>{val}</div>
+                  <div style={{
+                    width: '100%', maxWidth: 46, height: h, minHeight: 6,
+                    borderRadius: '10px 10px 6px 6px',
+                    background: best ? 'var(--brand-iris-600)' : 'var(--brand-lilac-300)',
+                    transformOrigin: 'center bottom',
+                    animation: 'ivygrow 520ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                  }} />
+                  <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--mauve-400)', textAlign: 'center', lineHeight: 1.2 }}>{LABELS[i]}</div>
                 </div>
-                <p className="text-[10px] text-[var(--text-muted)] text-center leading-tight">
-                  {WEEK_LABELS[i]}
-                </p>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
 
-        {weekTotals.every(v => v === 0) && (
-          <p className="text-center text-[var(--text-muted)] text-sm mt-6">
-            No stars earned yet — check off your tasks to get started!
-          </p>
-        )}
-
-        {weekTotals.some(v => v > 0) && bestWeek === 3 && (
-          <p className="text-center text-[var(--success)] text-sm font-semibold mt-4">
-            This is your best week yet! 🌟
-          </p>
-        )}
+        {/* Best week */}
+        <div style={{
+          marginTop: 16, padding: '16px 18px', borderRadius: 18,
+          background: 'linear-gradient(150deg, var(--brand-iris-50), var(--brand-lilac-100))',
+          border: '2px solid var(--brand-lilac-200)', display: 'flex', alignItems: 'center', gap: 13,
+        }}>
+          <div style={{
+            flex: '0 0 auto', width: 44, height: 44, borderRadius: 13, background: 'var(--brand-iris-600)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 5px 14px rgba(75, 84, 221, 0.32)',
+          }}>
+            <StarIcon size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--brand-lilac-600)' }}>Best week</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--brand-iris-950)' }}>{LABELS[bestIdx]} — {weeks[bestIdx]} ⭐</div>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -79,11 +79,47 @@
   --error:          #E5484D;
   --error-subtle:   #FCE9EA;
 
-  /* Star / Reward */
+  /* Star / Reward (Ivy-local reward currency — no gold primitive in oscar-ref by design) */
   --star-gold:        #FFC24B;
   --star-gold-deep:   #E6A21E;
   --star-gold-text:   #8A5510;
   --star-gold-subtle: #FFF3D6;
+  --star-gold-light:  #FFDB8A;
+  --star-gold-border: #FBE3AE;
+
+  /* ── V1.1 tokens — oscar-styling-reference names (Oscar's handoff uses these verbatim) ── */
+  /* Brand Iris — same values as --iris-*, reference naming */
+  --brand-iris-50:  #F1F1FD;
+  --brand-iris-100: #E4E5FA;
+  --brand-iris-200: #C9CBF5;
+  --brand-iris-300: #A9ADEE;
+  --brand-iris-400: #8288E6;
+  --brand-iris-500: #6169E0;
+  --brand-iris-600: #4B54DD;
+  --brand-iris-700: #3D43BE;
+  --brand-iris-800: #333A98;
+  --brand-iris-950: #1D2050;
+  /* Brand Lilac */
+  --brand-lilac-50:  #F6F2FF;
+  --brand-lilac-100: #EDE7FC;
+  --brand-lilac-200: #DDD1F7;
+  --brand-lilac-300: #C6B4F0;
+  --brand-lilac-400: #B29BEA;
+  --brand-lilac-500: #9B84E0;
+  --brand-lilac-600: #8570D2;
+  --brand-lilac-700: #6E5BC0;
+  --brand-lilac-900: #473B7C;
+  /* Spectrum hues (subset Oscar tokenized against) */
+  --mauve-200: #E7E4E7;
+  --mauve-400: #A89EA9;
+  --red-50:  #FEF2F2;
+  --red-500: #FB2C36;
+  --green-50:  #F0FDF4;
+  --green-200: #B9F8CF;
+  --green-600: #00A63E;
+  --amber-100: #FEF3C6;
+  --amber-700: #BB4D00;
+  --pink-200: #FCCEE8;
 }
 
 * {
@@ -98,7 +134,7 @@ html, body, #root {
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--surface-page);
+  background: var(--brand-lilac-50);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -118,6 +154,45 @@ body {
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Oscar's row entrance (V1.1) */
+@keyframes ivyfade {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes ivy-sheet-up {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Add-task step card entrance (Oscar V1.1) */
+@keyframes ivystepin {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Progress bars grow up from the baseline (Oscar V1.1) */
+@keyframes ivygrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Star-pill pop when the balance changes (Oscar V1.1) */
+@keyframes ivypop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.26); }
+  60%  { transform: scale(0.93); }
+  100% { transform: scale(1); }
+}
+
+/* Oscar's star-earned toast (V1.1) — in-hold-out over 1500ms */
+@keyframes ivytoast {
+  0%   { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  14%  { opacity: 1; transform: translateY(0) scale(1); }
+  82%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-8px) scale(0.98); }
 }
 
 .animate-star-pop {

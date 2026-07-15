@@ -1,69 +1,77 @@
 import { getHistory, getResetInfo } from '../lib/store'
+import { ClockIcon } from '../components/Icons'
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-CA', {
-    month: 'short', day: 'numeric', year: 'numeric',
-  })
+// Lifted from Oscar's V1.1 History screen (markup + tokens), wired to the store.
+function fmtDate(iso) {
+  const d = new Date(iso + 'T00:00:00')
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
 export default function History() {
-  const history   = getHistory()
-  const resetInfo = getResetInfo()
+  const history = getHistory() // newest first (store prepends)
+  const reset = getResetInfo()
+  const urgent = reset.shouldWarn
+  const chipBg = urgent ? 'var(--amber-100)' : 'var(--brand-iris-50)'
+  const chipColor = urgent ? 'var(--amber-700)' : 'var(--brand-lilac-600)'
 
   return (
-    <div className="flex flex-col min-h-full pb-24 pt-10">
-      <div className="px-5 mb-6">
-        <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-1">
-          Record
-        </p>
-        <h1 className="text-3xl font-[550] text-[var(--text-primary)]">Redemption History</h1>
-      </div>
-
-      {/* Reset warning */}
-      {resetInfo.shouldWarn && (
-        <div className="mx-5 mb-4 px-4 py-3 bg-[var(--warning-subtle)] border border-[var(--warning)] rounded-xl flex items-center gap-2">
-          <span>⚠️</span>
-          <p className="text-xs text-[var(--text-primary)]">
-            History resets in <strong>{resetInfo.daysLeft} day{resetInfo.daysLeft !== 1 ? 's' : ''}</strong>.
-          </p>
+    <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto', padding: '4px 22px 118px', background: 'var(--brand-lilac-50)' }}>
+      <div style={{ animation: 'ivyfade 240ms ease both' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, margin: '6px 2px 14px' }}>
+          <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--brand-iris-950)' }}>History</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 14, background: chipBg, color: chipColor }}>
+            <ClockIcon size={14} color={chipColor} />
+            <span style={{ fontSize: 12, fontWeight: 700 }}>
+              Resets in {reset.daysLeft} day{reset.daysLeft !== 1 ? 's' : ''}
+            </span>
+          </div>
         </div>
-      )}
 
-      {history.length === 0 ? (
-        <div className="flex flex-col items-center justify-center flex-1 text-center px-5 py-16">
-          <p className="text-4xl mb-3">🎁</p>
-          <p className="text-[var(--text-muted)] text-sm">No redemptions yet.</p>
-          <p className="text-[var(--text-muted)] text-sm">Earn stars and redeem them for rewards!</p>
-        </div>
-      ) : (
-        <div className="mx-5 flex flex-col gap-2">
-          {history.map(entry => (
-            <div
-              key={entry.id}
-              className="bg-[var(--surface-card)] border border-[var(--border-default)] rounded-xl px-4 py-4"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-[15px] font-[500] text-[var(--text-primary)] truncate">
-                    {entry.item}
-                  </p>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    {formatDate(entry.date)}
-                  </p>
+        {history.length === 0 ? (
+          /* Empty state */
+          <div style={{ textAlign: 'center', padding: '54px 20px', color: 'var(--mauve-400)' }}>
+            <div style={{
+              width: 64, height: 64, margin: '0 auto 14px', borderRadius: '50%',
+              background: 'var(--brand-lilac-100)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--brand-lilac-500)',
+            }}>
+              <ClockIcon size={30} color="var(--brand-lilac-500)" />
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--brand-iris-950)' }}>No redemptions yet</div>
+            <div style={{ fontSize: 14, marginTop: 4 }}>Redeem your stars and they'll show up here. ✦</div>
+          </div>
+        ) : (
+          /* List */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {history.map(h => (
+              <div key={h.id} style={{
+                display: 'flex', alignItems: 'center', gap: 13, padding: '14px 15px',
+                background: '#fff', border: '2px solid var(--brand-lilac-100)', borderRadius: 18,
+              }}>
+                <div style={{
+                  flex: '0 0 auto', width: 42, height: 42, borderRadius: 13,
+                  background: 'var(--brand-lilac-50)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--brand-lilac-500)',
+                }}>
+                  <ClockIcon size={18} color="var(--brand-lilac-500)" />
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-sm font-bold text-[var(--star-gold-text)]">
-                    −{entry.starsSpent} ⭐
-                  </p>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    {entry.starsRemaining} left
-                  </p>
+                <div style={{ flex: '1 1 0%', minWidth: 0 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--brand-iris-950)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {h.item}
+                  </div>
+                  <div style={{ fontSize: 12.5, color: 'var(--mauve-400)', marginTop: 1 }}>
+                    {fmtDate(h.dateISO)} · {h.remaining} ⭐ left
+                  </div>
+                </div>
+                <div style={{ flex: '0 0 auto', fontSize: 15, fontWeight: 700, color: 'var(--star-gold-text)' }}>
+                  −{h.spent} ⭐
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
